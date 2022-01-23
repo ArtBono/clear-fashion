@@ -1,8 +1,6 @@
 // Invoking strict mode https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode#invoking_strict_mode
 'use strict';
 
-console.log('🚀 This is it.');
-
 const MY_FAVORITE_BRANDS = [{
   'name': 'Hopaal',
   'url': 'https://hopaal.com/'
@@ -32,10 +30,9 @@ console.log(MY_FAVORITE_BRANDS[0]);
 // I can find on these e-shops
 // 2. Log the variable
 
-const cheapestTshirt='https://www.loom.fr/collections/tous-les-vetements/products/le-t-shirt';
+console.log('Qst1: The cheapest t-shirt');
+const cheapestTshirt='https://adresse.paris/t-shirts-et-polos/4238-t-shirt-ranelagh-1300000262026.html';
 console.log(cheapestTshirt)
-
-
 
 /**
  * 👕
@@ -50,6 +47,7 @@ console.log(cheapestTshirt)
 // 1. Create a variable and assign it the number of products
 // 2. Log the variable
 
+console.log('Qst2: Number of products');
 const lengthMarketPlace=marketplace.length;
 console.log(lengthMarketPlace)
 
@@ -59,9 +57,11 @@ console.log(lengthMarketPlace)
 // 2. Log the variable
 // 3. Log how many brands we have
 
+console.log('Qst3: Brands name');
 const brandsName = []
-marketplace.forEach(product => brandsName.push(product.brandsName));
-console.log(brandsName.length);
+marketplace.forEach(product => brandsName.push(product.brand));
+console.log(brandsName);
+// console.log(brandsName.length);
 
 
 // 🎯 TODO: Sort by price
