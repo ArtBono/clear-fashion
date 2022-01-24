@@ -15,14 +15,13 @@ const MY_FAVORITE_BRANDS = [{
 console.table(MY_FAVORITE_BRANDS);
 console.log(MY_FAVORITE_BRANDS[0]);
 
-
-
 /**
  * 🌱
  * Let's go with a very very simple first todo
  * Keep pushing
  * 🌱
  */
+
 
 // 🎯 TODO: The cheapest t-shirt
 // 0. I have 3 favorite brands stored in MY_FAVORITE_BRANDS variable
@@ -34,6 +33,7 @@ console.log('Qst1: The cheapest t-shirt');
 const cheapestTshirt='https://adresse.paris/t-shirts-et-polos/4238-t-shirt-ranelagh-1300000262026.html';
 console.log(cheapestTshirt)
 
+
 /**
  * 👕
  * Easy 😁?
@@ -42,6 +42,7 @@ console.log(cheapestTshirt)
  * The variable is loaded by the file data.js
  * 👕
  */
+
 
 // 🎯 TODO: Number of products
 // 1. Create a variable and assign it the number of products
@@ -58,10 +59,16 @@ console.log(lengthMarketPlace)
 // 3. Log how many brands we have
 
 console.log('Qst3: Brands name');
-const brandsName = []
-marketplace.forEach(product => brandsName.push(product.brand));
+
+function getUniqueVal(value, index, self) {
+    return self.indexOf(value) === index;}
+
+const brds = []
+marketplace.forEach(product => brds.push(product.brand));
+
+const brandsName = brds.filter(getUniqueVal)
 console.log(brandsName);
-// console.log(brandsName.length);
+// console.log(brandsName.length);  // there is 5 brands
 
 
 // 🎯 TODO: Sort by price
@@ -69,15 +76,17 @@ console.log(brandsName);
 // 2. Create a variable and assign it the list of products by price from lowest to highest
 // 3. Log the variable
 
-function comparePrice(a,b)
-{
-  return a.price - b.price;
+console.log('Qst4: Sort by price');
+
+function sortByPrice(items) {
+    return items.sort(function (a, b) {
+        return parseFloat(a.price) - parseFloat(b.price);
+    });
 }
 
-let sortByPrice = marketplace;
+const sortedByPrice = sortByPrice(marketplace);
 
-sortByPrice.sort(comparePrice);
-console.log(sortByPrice);
+console.table(sortedByPrice);
 
 
 // 🎯 TODO: Sort by date
@@ -85,17 +94,45 @@ console.log(sortByPrice);
 // 2. Create a variable and assign it the list of products by date from recent to old
 // 3. Log the variable
 
+console.log('Qst5: Sort by date');
+
+function sortByDate(items) {
+    return items.sort(function (a, b) {
+        return new Date(b.date) - new Date(a.date);
+    });
+}
+
+const sortedByDate = sortByDate(marketplace);
+
+console.table(sortedByDate);
+
 
 // 🎯 TODO: Filter a specific price range
 // 1. Filter the list of products between 50€ and 100€
 // 2. Log the list
+
+console.log('Qst6: Filter a specific price range (50-100)');
+
+const pdtBetw50and100 = [];
+marketplace.forEach(product => {
+    if (product.price >= 50 && product.price <= 100) {
+        pdtBetw50and100.push(product);
+    }
+});
+
+console.table(pdtBetw50and100);
 
 
 // 🎯 TODO: Average Basket
 // 1. Determine the average basket of the marketplace
 // 2. Log the average
 
+console.log('Qst7: Average Basket');
 
+var sum = 0;
+marketplace.forEach(product => sum += product.price);
+var avgBasket = sum / marketplace.length;
+console.log("Average basket price in the marketplace : " + Math.round(avgBasket));
 
 
 
@@ -105,6 +142,7 @@ console.log(sortByPrice);
  * Keep pushing
  * 🏎
  */
+
 
 // 🎯 TODO: Products by brands
 // 1. Create an object called `brands` to manipulate products by brand name
@@ -123,16 +161,61 @@ console.log(sortByPrice);
 // 3. Log the number of products by brands
 
 
+console.log('Qst8: Products by brands');
+
+const adresseList = [];
+const loomList = [];
+const milleQVTroisList = [];
+const dedicatedList = [];
+const aatiseList = [];
+
+marketplace.forEach(product => {
+    if (product.brand == 'adresse') adresseList.push(product);
+    else if (product.brand == 'loom') loomList.push(product);
+    else if (product.brand == '1083') milleQVTroisList.push(product);
+    else if (product.brand == 'dedicated') dedicatedList.push(product);
+    else aatiseList.push(product);
+});
+
+const brands = {
+    'adresse': adresseList,
+    'loom': loomList,
+    '1083': milleQVTroisList,
+    'dedicated': dedicatedList,
+    'aatise': aatiseList,
+};
+
+console.log(brands);
+
+console.log("Number of products by brand :\n" + "Adresse : " + adresseList.length +
+    "\nLoom : " + loomList.length + "\n1083 : " + milleQVTroisList.length + "\nDedicated : " +
+    dedicatedList.length + "\nAatise : " + aatiseList.length);
+
+
 // 🎯 TODO: Sort by price for each brand
 // 1. For each brand, sort the products by price, from highest to lowest
 // 2. Log the sort
+
+console.log('Qst9: Sort by price for each brand');
+
+console.log("Products sorted by price (highest to lowest)\n");
+for (const i in brands) {
+    let sortBrandByPrice = sortByPrice(brands[i]).reverse();
+    console.table(sortBrandByPrice);
+};
 
 
 // 🎯 TODO: Sort by date for each brand
 // 1. For each brand, sort the products by date, from old to recent
 // 2. Log the sort
 
+console.log('Qst10: Sort by date for each brand');
 
+console.log("Products sorted by date (old to recent)\n");
+for (const i in brands) {
+    let sortBrandByDate = sortByDate(brands[i]).reverse();
+    console.table(sortBrandByDate);
+};
 
 
 
@@ -143,11 +226,31 @@ console.log(sortByPrice);
  * 💶
  */
 
+
 // 🎯 TODO: Compute the p90 price value
 // 1. Compute the p90 price value of each brand
 // The p90 value (90th percentile) is the lower value expected to be exceeded in 90% of the products
 
+console.log('Qst11: Compute the p90 price value');
 
+function calcP90(list) {
+    let sortBrandByPrice = sortByPrice(list).reverse();
+    const p90 = Math.round(0.90 * list.length);
+    let j = 0;
+    while (j != p90) {
+        j += 1;
+    }
+    return (sortBrandByPrice[j]);
+}
+let p90Adresse = calcP90(adresseList);
+let p90Loom = calcP90(loomList);
+let p901083 = calcP90(milleQVTroisList);
+let p90Dedicated = calcP90(dedicatedList);
+let p90Aatise = calcP90(aatiseList);
+
+console.table("p90 value of each brand :\n" + "Adresse : " + Object.values(p90Adresse) +
+    "\nLoom : " + Object.values(p90Loom) + "\n1083 : " + Object.values(p901083) + "\nDedicated : " +
+    Object.values(p90Dedicated) + "\nAatise : " + Object.values(p90Aatise));
 
 
 
@@ -219,24 +322,86 @@ const COTELE_PARIS = [
   }
 ]
 
+
+
 // 🎯 TODO: New released products
 // // 1. Log if we have new products only (true or false)
 // // A new product is a product `released` less than 2 weeks.
+
+console.log('Qst12: New released products');
+
+let newProductCount = 0;  // the counter which count the new products
+let newProductsOnly = false;
+let date = new Date();
+let currDate = date.toISOString().split('T')[0]; // we obtain the current date
+
+for (const i in COTELE_PARIS) {
+    var difference = Math.abs(currDate - COTELE_PARIS[i].released);
+    const days = difference / (1000 * 3600 * 24)
+    if (days < 14) newProductCount += 1;
+};
+
+if (newProductCount == COTELE_PARIS.length) newProductsOnly = true;
+console.log("New products only : " + newProductsOnly);
 
 
 // 🎯 TODO: Reasonable price
 // // 1. Log if coteleparis is a reasonable price shop (true or false)
 // // A reasonable price if all the products are less than 100€
 
+console.log('Qst13: Reasonable price');
+
+let productsUnder100 = 0;
+let reasonable = false;
+
+for (const i in COTELE_PARIS) {
+    if (COTELE_PARIS[i].price < 100) productsUnder100 += 1;
+}
+
+if (productsUnder100 == COTELE_PARIS.length) reasonable = true;
+console.log("Reasonable price : " + reasonable);
+
 
 // 🎯 TODO: Find a specific product
 // 1. Find the product with the uuid `b56c6d88-749a-5b4c-b571-e5b5c6483131`
 // 2. Log the product
 
+console.log('Qst14: Find a specific product');
+
+let product = null;
+for (const i in COTELE_PARIS) {
+    if (COTELE_PARIS[i].uuid == 'b56c6d88-749a-5b4c-b571-e5b5c6483131') product = COTELE_PARIS[i];
+}
+console.table("Product with the b56c6d88-749a-5b4c-b571-e5b5c6483131 uuid : " + Object.values(product));
+
 
 // 🎯 TODO: Delete a specific product
 // 1. Delete the product with the uuid `b56c6d88-749a-5b4c-b571-e5b5c6483131`
 // 2. Log the new list of product
+
+console.log('Qst15: Delete a specific product');
+
+function clone(obj) {
+    try {
+        var copy = JSON.parse(JSON.stringify(obj));
+    } catch (ex) {
+        alert("");
+    }
+    return copy;
+}
+
+let newList = clone(COTELE_PARIS);
+let indinceObjToSuppress = 0;
+
+for (const i in COTELE_PARIS) {
+    if (COTELE_PARIS[i].uuid == 'b56c6d88-749a-5b4c-b571-e5b5c6483131') indinceObjToSuppress = i;
+}
+
+newList.splice(indinceObjToSuppress, 1);
+console.log("New list of product : ");
+console.table(newList);
+//console.table(COTELE_PARIS);
+
 
 // 🎯 TODO: Save the favorite product
 let blueJacket = {
@@ -247,12 +412,18 @@ let blueJacket = {
 
 // we make a copy of blueJacket to jacket
 // and set a new property `favorite` to true
+
+/*
 let jacket = blueJacket;
 
 jacket.favorite = true;
 
 // 1. Log `blueJacket` and `jacket` variables
 // 2. What do you notice?
+
+console.log("BlueJacket variable : " + Object.values(blueJacket));
+console.log("Jacket variable : " + Object.values(jacket));
+*/
 
 blueJacket = {
   'link': 'https://coteleparis.com/collections/tous-les-produits-cotele/products/la-veste-bleu-roi',
@@ -262,7 +433,12 @@ blueJacket = {
 
 // 3. Update `jacket` property with `favorite` to true WITHOUT changing blueJacket properties
 
+console.log('Qst16: Save the favorite product');
 
+let jacket = clone(blueJacket);
+jacket.favorite = true;
+console.log("BlueJacket variable : " + Object.values(blueJacket));
+console.log("Jacket variable : " + Object.values(jacket));
 
 
 
