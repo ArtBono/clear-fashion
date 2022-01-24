@@ -127,12 +127,12 @@ console.table(pdtBetw50and100);
 // 1. Determine the average price of the marketplace
 // 2. Log the average
 
-console.log('Qst7: Average Basket');
+console.log('Qst7: Average Price');
 
 var sum = 0;
 marketplace.forEach(product => sum += product.price);
-var avgBasket = sum / marketplace.length;
-console.log("Average basket price in the marketplace : " + Math.round(avgBasket));
+var avgPrice = sum / marketplace.length;
+console.log("Average price in the marketplace : " + Math.round(avgPrice));
 
 
 
