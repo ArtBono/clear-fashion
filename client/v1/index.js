@@ -451,3 +451,6 @@ console.log("Jacket variable : " + Object.values(jacket));
 // 🎯 TODO: Save in localStorage
 // 1. Save MY_FAVORITE_BRANDS in the localStorage
 // 2. log the localStorage
+
+window.localStorage.setItem("MY_FAVORITE_BRANDS", JSON.stringify(MY_FAVORITE_BRANDS));
+console.log(localStorage);
