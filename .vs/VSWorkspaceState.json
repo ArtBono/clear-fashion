@@ -2,8 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\client",
-    "\\client\\v1"
+    "\\client\\v1",
+    "\\client\\v2"
   ],
-  "SelectedNode": "\\client\\v1\\index.html",
+  "SelectedNode": "\\client\\v2\\portfolio.js",
   "PreviewInSolutionExplorer": false
 }
