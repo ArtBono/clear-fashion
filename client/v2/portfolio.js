@@ -1,5 +1,4 @@
-// Invoking strict mode https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode#invoking_strict_mode
-'use strict';
+// Invoking strict mode https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode#invoking_strict_mode'use strict';
 
 // current products on the page
 let currentProducts = [];
@@ -51,7 +50,7 @@ const fetchProducts = async (page = 1, size = 12) => {
 };
 
 /**
- * Render list of products
+ * Render products
  * @param  {Array} products
  */
 const renderProducts = products => {
@@ -63,7 +62,8 @@ const renderProducts = products => {
       <div class="product" id=${product.uuid}>
         <span>${product.brand}</span>
         <a href="${product.link}">${product.name}</a>
-        <span>${product.price}</span>
+        <span>${product.price}€</span>
+        <span>, ${product.released}</span>
       </div>
     `;
     })
@@ -76,7 +76,7 @@ const renderProducts = products => {
 };
 
 /**
- * Render page selector
+ * Render pagination
  * @param  {Object} pagination
  */
 const renderPagination = pagination => {
@@ -91,7 +91,7 @@ const renderPagination = pagination => {
 };
 
 /**
- * Render page selector
+ * Render indicator
  * @param  {Object} pagination
  */
 const renderIndicators = pagination => {
@@ -99,7 +99,6 @@ const renderIndicators = pagination => {
 
   spanNbProducts.innerHTML = count;
 };
-
 
 /**
  * Render brandselector
@@ -136,37 +135,52 @@ const render = (products, pagination) => {
 
 
 
-
-
 /**
  * Declaration of all Listeners
  */
 
+/** Feature 0 : Select the number of products to display
+ * 
+ * @type {[type]}
+=======
 /**
  * Select the number of products to display
+>>>>>>> 22aaa04fe745ab34e6cd99c453640d670cfb4762
+=======
+/** Feature 0 : Select the number of products to display
+ * 
+ * @type {[type]}
+>>>>>>> 0c585460b418dc3becc3147d3f1e9a55752ac560
  */
-selectShow.addEventListener('change', async (event) => {
-  const products = await fetchProducts(currentPagination.currentPage, parseInt(event.target.value));
 
-  setCurrentProducts(products);
-  render(currentProducts, currentPagination);
-});
+selectShow.addEventListener('change', event => {
+  fetchProducts(1, parseInt(event.target.value)) // 1 to reinitialize to page 1 when we change the pageSize
+    .then(setCurrentProducts)
+    .then(() => render(currentProducts, currentPagination));
 
-document.addEventListener('DOMContentLoaded', async () => {
+
+  document.addEventListener('DOMContentLoaded', async () => {
   const products = await fetchProducts();
 
   setCurrentProducts(products);
   render(currentProducts, currentPagination);
 });
 
-// Feature 1 - Browse pages 
-selectShow.addEventListener('change', event => {
-  fetchProducts(parseInt(event.target.value), currentPagination.pageSize)
-    .then(setCurrentProducts)
-    .then(() => render(currentProducts, currentPagination));
+/** Feature 1 : Select the page to display
+* 
+* 
+*/
+selectPage.addEventListener('change', event => {
+  fetchProducts(parseInt(event.target.value),currentPagination.pageSize)
+  .then(setCurrentProducts)
+  .then(() => render(currentProducts, currentPagination));
 });
 
-// Feature 2 - Filter by brands
+/** Feature 2 : filter by brand
+ * 
+ * 
+ */
+
 selectBrand.addEventListener('change', async (event) => {
   var products = await fetchProducts(currentPagination.currentPage, currentPagination.pageSize);
 
@@ -181,7 +195,9 @@ selectBrand.addEventListener('change', async (event) => {
     render(currentProducts, currentPagination);
 });
 
-// Feature 3 - Filter by recent products
+/** Feature 3 : Filter by reasonnable price 
+ * 
+ */
 
 selectByReasonnablePrice.addEventListener('change', async (event) => {
   const products = await fetchProducts(currentPagination.currentPage, currentPagination.pageSize);
@@ -195,7 +211,9 @@ selectByReasonnablePrice.addEventListener('change', async (event) => {
 
 });
 
-// Feature 4 - Filter by reasonable price
+/** Feature 4 : Filter by recently released
+ * 
+ */
 
 function recentlyReleased(product_date){
   let now = new Date();
@@ -216,7 +234,9 @@ selectByRecentlyReleased.addEventListener('change', async (event) => {
 
 });
 
-// Feature 5 - Sort by price + Feature 6 - Sort by date
+/** Feature 5 & 6 : Sort by date and price (asc and desc)
+ * 
+ */
 
 selectSort.addEventListener('change', async (event) => {
   switch (event.target.value) {
@@ -238,4 +258,4 @@ selectSort.addEventListener('change', async (event) => {
   render(currentProducts, currentPagination);
 });
 
-
+})
