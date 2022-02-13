@@ -3,8 +3,10 @@
     "",
     "\\client",
     "\\client\\v1",
-    "\\client\\v2"
+    "\\client\\v2",
+    "\\server",
+    "\\server\\sources"
   ],
-  "SelectedNode": "\\client\\v2\\index.html",
+  "SelectedNode": "\\server\\sources\\adresse.js",
   "PreviewInSolutionExplorer": false
 }
