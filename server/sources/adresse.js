@@ -18,10 +18,14 @@ const parse = data => {
                 .replace(/\s/g, ' ').split('  ')[0];
             const price = parseInt(
                 $(element)
-                .find('.price')
-                .text()
+                    .find('.price')
+                    .text()
             );
-            return { name, price};
+
+            var link = $(element)
+                .find('.product-name').attr('href');
+
+            return { name, price, link };
         })
         .get();
 };

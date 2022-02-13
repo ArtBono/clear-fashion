@@ -19,10 +19,15 @@ const parse = data => {
                 .replace(/\s/g, ' ').split("  ");
             const price = parseInt(
                 $(element)
-                .find('.price')
-                .text()
+                    .find('.price')
+                    .text()
             );
-            return { name, price};
+            var color = name[name.length - 1];
+            var link = $(element)
+                //.find('.product-name').attr('a href');
+                .find('a').attr('href');
+            var name_complete = name[0] + color;
+            return { name_complete, price, link };
         })
         .get();
 };

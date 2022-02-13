@@ -1,34 +1,35 @@
 ﻿/* eslint-disable no-console, no-process-exit */
 
 /** Link of the brand :
- * https://adresse.paris/602-nouveautes
+ * https://www.montlimart.com/toute-la-collection.html
  */
 
-//Adresse
+//Montlimart
 
-const adresse = require('./sources/adresse');
+const montlimart = require('./sources/montlimart');
+
 
 /**
- * sandbox for adresse
+ * sandbox for montlimart
  * @param {*} eshop 
  */
 
 
- async function sandbox_adresse (eshop = 'https://adresse.paris/602-nouveautes') {
+ async function sandbox_montlimart (eshop = 'https://www.montlimart.com/toute-la-collection.html') {
   try {
     console.log(`🕵️‍♀️  browsing ${eshop} source`);
 
-    const products = await adresse.scrape(eshop);
+    const products = await montlimart.scrape(eshop);
 
     const fs = require('fs');
 
       const data = JSON.stringify(products);
 
-      fs.writeFile('products_adresse.json', data, (err) => {
+      fs.writeFile('products_montlimart.json', data, (err) => {
           if (err) {
               throw err;
           }
-          console.log("JSON file 'products_adresse.json' is created and saved.");
+          console.log("JSON file 'products_montlimart.json' is created and saved.");
       });
       
     console.log(products);
@@ -40,6 +41,7 @@ const adresse = require('./sources/adresse');
   }
 }
 
-const [,, eshop] = process.argv;
 
-sandbox_adresse(eshop);
+
+const [,, eshop] = process.argv;
+sandbox_montlimart(eshop);
