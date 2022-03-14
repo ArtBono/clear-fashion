@@ -4,9 +4,8 @@
     "\\client",
     "\\client\\v1",
     "\\client\\v2",
-    "\\server",
-    "\\server\\sources"
+    "\\server"
   ],
-  "SelectedNode": "\\server\\products_montlimart.json",
+  "SelectedNode": "\\server\\Makefile",
   "PreviewInSolutionExplorer": false
 }
