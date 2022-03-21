@@ -3,8 +3,8 @@ const express = require('express');
 const { calculateLimitAndOffset, paginate,estimatedDocumentCount } = require('paginate-info')
 const helmet = require('helmet');
 const {MongoClient} = require('mongodb');
-const MONGODB_URI = 'mongodb+srv://SebBuquet:Ma99Seb00@clearfashiondata.dfypd.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
-const MONGODB_DB_NAME = 'ClearFashionData';
+const MONGODB_URI = 'mongodb+srv://Arthur:TuCroisQueJeTaiPasVu@clearfashion.ljwkc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+const MONGODB_DB_NAME = 'clearfashion';
 const PORT = 8092;
 
 const app = express();

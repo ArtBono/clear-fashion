@@ -891,10 +891,10 @@
   "resolved" "https://registry.npmjs.org/negotiator/-/negotiator-0.6.2.tgz"
   "version" "0.6.2"
 
-"node-fetch@^2.6.1", "node-fetch@2.6.6":
-  "integrity" "sha512-Z8/6vRlTUChSdIgMa51jxQ4lrw/Jy5SOW10ObaA47/RElsAN2c5Pn8bTgFGWn/ibwzXTE8qwr1Yzx28vsecXEA=="
-  "resolved" "https://registry.npmjs.org/node-fetch/-/node-fetch-2.6.6.tgz"
-  "version" "2.6.6"
+"node-fetch@^2.6.1", "node-fetch@^2.6.7":
+  "integrity" "sha512-ZjMPFEfVx5j+y2yF35Kzx5sF7kDzxuDj6ziH4FFbOp87zKDZNx8yExJIb05OGF4Nlt9IHFIMBkRl41VdvcNdbQ=="
+  "resolved" "https://registry.npmjs.org/node-fetch/-/node-fetch-2.6.7.tgz"
+  "version" "2.6.7"
   dependencies:
     "whatwg-url" "^5.0.0"
 
@@ -971,6 +971,11 @@
     "registry-auth-token" "^4.0.0"
     "registry-url" "^5.0.0"
     "semver" "^6.2.0"
+
+"paginate-info@^1.0.4":
+  "integrity" "sha512-wMJUQgitZgmxlHU8MbQc2GvXLh1MuejdiMnlYfA0iXBphbLQT9wuO8WtzmTw6CkPFavEAtlh8BPpBByrZijuaw=="
+  "resolved" "https://registry.npmjs.org/paginate-info/-/paginate-info-1.0.4.tgz"
+  "version" "1.0.4"
 
 "parse-domain@^4.1.0":
   "integrity" "sha512-zas79foMEsbMbIcJoPx26+NISWa3jTzZykOW9mXfRzvgadHvAHGd7qcCc1FbSWbD1I4qP71UWAxlTgu7Uq6IQg=="
@@ -1118,6 +1123,11 @@
   "integrity" "sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg=="
   "resolved" "https://registry.npmjs.org/safer-buffer/-/safer-buffer-2.1.2.tgz"
   "version" "2.1.2"
+
+"sandbox.js@^2.0.2":
+  "integrity" "sha1-xJVjpv5+a3WrCfp3ofaARXHQPHI="
+  "resolved" "https://registry.npmjs.org/sandbox.js/-/sandbox.js-2.0.2.tgz"
+  "version" "2.0.2"
 
 "saslprep@^1.0.3":
   "integrity" "sha512-/MY/PEMbk2SuY5sScONwhUDsV2p77Znkb/q3nSVstq/yQzYJOH/Azh29p9oJLsl3LnQwSvZDKagDGBsBwSooag=="
