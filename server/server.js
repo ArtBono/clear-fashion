@@ -1,21 +1,22 @@
 const fs = require('fs');
 const {MongoClient} = require('mongodb');
 const MONGODB_URI = 'mongodb+srv://Arthur:TuCroisQueJeTaiPasVu@clearfashion.ljwkc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
-const MONGODB_DB_NAME = 'clearfashion';
+const MONGODB_DB_NAME = 'dedicatedbrand';
 
 let collection=null;
 let db=null;
-
+ 
 const Connection = async()=>
 {
     const client = await MongoClient.connect(MONGODB_URI, {'useNewUrlParser': true});
     db =  client.db(MONGODB_DB_NAME)
-    //await productsOfABrand('montlimart');
+    //await importData();
+    //await productsOfABrand('dedicated');
     //await productsLessThanAprice(10);
     //await productsSortedByDate();
     //await productsSortedByPrice();
     //await productsScrapedLessThanTwoWeeksAgo();
-	await productsById("f8a0e828-0879-5984-abae-2b1251b6f318");
+	await productsById("1418eebd-4f43-52a6-bd36-9f51406bea67");
     process.exit()   
 }
 
@@ -23,7 +24,7 @@ const importData = async()=>
 {
     const collection = db.collection('products')
     const result = collection.insertMany(products)
-    console.log(result);
+    console.log(result);    
 }
 
 const productsOfABrand = async(brand)=>
