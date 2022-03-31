@@ -1,22 +1,19 @@
 const cors = require('cors');
 const express = require('express');
-const { calculateLimitAndOffset, paginate,estimatedDocumentCount } = require('paginate-info')
 const helmet = require('helmet');
-const {MongoClient} = require('mongodb');
-const MONGODB_URI = 'mongodb+srv://Arthur:TuCroisQueJeTaiPasVu@clearfashion.ljwkc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
-const MONGODB_DB_NAME = 'clearfashion';
-const PORT = 8092;
+const { ObjectId } = require('mongodb');
+const db = require('./db');
+const { calculateLimitAndOffset, paginate } = require('paginate-info');
 
+
+const PORT = 8092;
 const app = express();
-const db = async()=>
-{
-	const client = await MongoClient.connect(MONGODB_URI, {'useNewUrlParser': true});
-	const database =  client.db(MONGODB_DB_NAME)
-	return database
+module.exports = app;
+
+async function connection(){
+  await db.connect();
 }
 
-
-module.exports = app;
 
 app.use(require('body-parser').json());
 app.use(cors());
@@ -24,81 +21,82 @@ app.use(helmet());
 
 app.options('*', cors());
 
-app.get('/', (request, response) => {
-  response.send({'ack': true});
-});
-
-app.get('/products/:id', (request, response) => {
-	var url=request.url
-	var components = url.split("/");
-	var res=productsById(request.params.id).then(res => response.send(res));
-});
-
-app.get('/search', (request, response) => {
-	let brand=request.query.brand;
-	let price=request.query.price;
-	let limit=request.query.limit;
-	let page =request.query.page;
-	console.log(brand)
-	console.log(price)
-	console.log(limit)
-	console.log(page)
-	var res=searchProducts(brand,price,limit,page).then(res => response.send(res));
-
-});
-
-app.listen(PORT);
+var products = "";
 
 console.log(`📡 Running on port ${PORT}`);
 
-const productsById = async(id)=>
-{
-	const client = await MongoClient.connect(MONGODB_URI, {'useNewUrlParser': true});
-	db =  client.db(MONGODB_DB_NAME)
-	collection = db.collection('products')
-	const products = await collection.find({"_id":id}).toArray();
-	console.log(products);
-	return products
+
+// All products 
+app.get('/products', async(request, response) => {
+  await connection();
+  const filters = request.query;
+  const count = await db.countDocumentsDb();
+  const { limit, offset } = calculateLimitAndOffset(parseInt(filters.page), parseInt(filters.size));
+  var products = await db.findProducts({}, offset, limit, false);
+  const meta = paginate(parseInt(filters.page), count, products, parseInt(filters.size));
+
+  response.send(
+    {
+      "success" : true, 
+      "data" : {
+        "result" : products, 
+        "meta" : meta
+      }
+    }
+  );
+})
+
+
+
+// Product search, Search for specific product 
+app.get('/products/search', async(request, response) => {
+  const filters = request.query;
+  console.log('filters :>> ', filters);
+  
+  const brand = filters.brand !== undefined ? filters.brand : ''
+  const price = parseInt(filters.price,10) > 0 ? parseInt(filters.price,10) : ''
+  const limit = parseInt(filters.limit,10) > 0 ? parseInt(filters.limit,10) : 12
+
+  var match = {}
+  if( brand === '' &&  price !== '') match = {price: price} 
+  else if(brand !== '' && price === '') match = {brand: brand}
+  else if(brand !== '' && price !== '') match = {brand: brand, price: price}
+
+  query = [
+    {'$match' : match},
+    {'$sort' : {price:1}},
+    {'$limit' : limit}
+    ]
+  console.log('query :>> ', query);
+  
+  var filteredProducts = await db.aggregateQuery(query)
+
+  console.log('filteredProducts.length :>> ', filteredProducts.length);
+  response.send(filteredProducts);
+})
+
+
+// Products by id
+app.get('/products/:_id',  async(request, response) => {
+  products = await db.findProducts({'_id': new ObjectId(request.params._id)}, false)
+  response.send({"count" : products.length, "products" : products});
+})
+
+
+// Products by brand 
+app.get('/products/brand=', async(request, response) => {
+  products = await db.findProducts({'brand': 'adresse'}, false)
+  console.log(products.length)
+  response.send({"products" : products});
+})
+
+
+
+async function main(){
+  await connection();
+  app.listen(PORT);
+  //await request();
+  //await db.close();
 }
 
-const productsLessThanAprice = async(price)=>
-{
-	const client = await MongoClient.connect(MONGODB_URI, {'useNewUrlParser': true});
-	db =  client.db(MONGODB_DB_NAME)
-    collection = db.collection('products')
-    const products = await collection.find({price:{$lt:price}}).toArray();
-	return products
-}
-
-const searchProducts = async(brand,val,limitation,page)=>
-{
-	let b=[]
-	if (brand===undefined) {b=["dedicated","adresse","montlimart"];}
-	else {b.push(brand);}
-	if (brand==="") {b=["dedicated","adresse","montlimart"];}
-	else {b.push(brand);}
-	
-	let v=0
-	if (val===undefined) {v=1000000000000;}
-	else {v= val}
-	
-	let l=0
-	if (limitation===undefined) {l=12;}
-	else {l=parseInt(limitation)}
-	
-	let p=0
-	if (page===undefined) {p=1;}
-	else {p=parseInt(page)}
-	
-	const client = await MongoClient.connect(MONGODB_URI, {'useNewUrlParser': true});
-	db =  client.db(MONGODB_DB_NAME)
-    collection = db.collection('products')
-	
-	const count =await collection.find({brand:{$in :b}},{price:{$lt:v}}).count();
-	const { limit, offset } = calculateLimitAndOffset(page, limitation);
-	
-    const products = await collection.find({brand:{$in :b}},{price:{$lt:v}}).skip(offset).limit(limit).toArray();
-	const meta = paginate(p, count, products, limitation);
-	
-	return ({ products, meta });
-}
+main();
