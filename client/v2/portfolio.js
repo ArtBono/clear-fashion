@@ -1,29 +1,30 @@
 // current products on the page
-let currentProducts = [];
-let currentPagination = {};
-let favoriteProducts = [];
-let currentBrand = "Select a brand to filter";
-let recentOnly = false;
-let cheapOnly = false;
+var currentProducts = [];
+var currentFavorites ="";
+var currentPagination = {};
+var currentBrand="";
+var lastReleasedDateVar=new Date("1901-10-01");
+var meanProduct=0;
+var sdProduct=0;
+var currentNbNewProducts=0;
+var favorites = [];
 
-// instantiate the selectors
-const selectSize = document.querySelector('#show-select');
-const selectPage = document.querySelector('#page-select');
-const selectBrand = document.querySelector('#brand-select');
+// inititiate selectors
+const selectShow = document.querySelector('#show-select');
 const selectSort = document.querySelector('#sort-select');
-
+const selectPage = document.querySelector('#page-select');
 const sectionProducts = document.querySelector('#products');
-
+const sectionFavorites = document.querySelector('#favorites');
+const selectBrands = document.querySelector('#brand-select');
+const selectFilter = document.querySelector('#filter-select');
 const spanNbProducts = document.querySelector('#nbProducts');
+const spanP50 = document.querySelector('#p50');
+const spanP90 = document.querySelector('#p90');
+const spanP95 = document.querySelector('#p95');
 const spanNbNewProducts = document.querySelector('#nbNewProducts');
-const spanp50 = document.querySelector("#p50");
-const spanp90 = document.querySelector("#p90");
-const spanp95 = document.querySelector("#p95");
-const spanLastRelease = document.querySelector("#last-release");
+const spanLastReleaseDate = document.querySelector('#lastReleasedDate');
+const spanFavorite = document.querySelector('#favoriteProduct');
 
-const inputRecentFilter = document.querySelector('#recent-filter');
-const inputPriceFilter = document.querySelector("#price-filter");
-const inputFavorite = document.querySelector("#fav-product");
 
 
 /**
@@ -31,8 +32,10 @@ const inputFavorite = document.querySelector("#fav-product");
  * @param {Array} result - products to display
  * @param {Object} meta - pagination meta info
  */
-const setCurrentProducts = ({result, meta}) => {
-  currentProducts = result.sort((p1, p2) => p1.price - p2.price);
+const setCurrentProducts = ({products, meta}) => {
+	console.log(products);
+	console.log(meta);
+  currentProducts = products;
   currentPagination = meta;
 };
 
@@ -42,44 +45,256 @@ const setCurrentProducts = ({result, meta}) => {
  * @param  {Number}  [size=12] - size of the page
  * @return {Object}
  */
-const fetchProducts = async (page = 1, size = 12) => {
+
+const fetchProducts2 = async (page = 1, size = 12,brands="") => {
+  
   try {
     const response = await fetch(
-       `https://clear-fashion-api.vercel.app?page=${page}&size=${size}`
-     );
-    /*
-    const response = await fetch(
-      `https://server-chi-gray.vercel.app/products/search?page=${page}&size=${size}`, 
-      { headers: {origin: null} }
-    );*/
-
+      `https://clear-fashion-9jifddx12-sebastien78000.vercel.app/search?page=${page}&limit=${size}&brand=${brands}`
+    );
     const body = await response.json();
-
+	/*
     if (body.success !== true) {
       console.error(body);
       return {currentProducts, currentPagination};
-    }
-
-    return body.data;
+    }*/
+    currentBrand=brands
+    return body;
+	
   } catch (error) {
     console.error(error);
+	console.log("passeIci");
     return {currentProducts, currentPagination};
   }
 };
+
+
+
+const SortByDateByPrice=(filter)=>
+{
+  //var newCurrentProducts=[]
+
+  if(filter=="price-asc")
+  {
+    currentProducts=currentProducts.sort(function(a,b)
+    {
+      return parseFloat(a.price)-parseFloat(b.price);
+    })
+    return currentProducts;
+  }
+  else if(filter=="price-desc")
+  {
+    currentProducts=currentProducts.sort(function(a,b)
+    {
+      return parseFloat(b.price)-parseFloat(a.price);
+    })
+
+    return currentProducts;
+  }
+  else if(filter=="date-asc")
+  {
+    currentProducts=currentProducts.sort(function(a,b)
+    {
+      return new Date(b.released)-new Date(a.released) ;
+    })
+    return currentProducts;
+  }
+  else if(filter=="date-desc")
+  {
+    currentProducts=currentProducts.sort(function(a,b)
+    {
+      return new Date(a.released)-new Date(b.released);
+    })
+
+    return currentProducts;
+  }
+  else {
+    return currentProducts;
+  }
+}
+
+const FilterByRecentProductByReasonnablePrice=(filter)=>
+{
+  //var newCurrentProducts=[]
+  var newCurrentProducts =[];
+  if(filter=="price")
+  {
+    currentProducts.forEach(x =>
+      {
+        if(x.price<50)
+        {
+          newCurrentProducts.push(x);
+        }
+      })
+    currentProducts=newCurrentProducts;
+    console.log(currentProducts);
+    return currentProducts;
+  }
+  else if(filter=="recent")
+  {
+    currentProducts.forEach(x =>
+      {
+        var actualDate = new Date(Date.now());
+        actualDate.setDate(actualDate.getDate()-15);
+        if(actualDate<new Date(x.released))
+        {
+          newCurrentProducts.push(x);
+        }
+      })
+    currentProducts=newCurrentProducts;
+    return currentProducts;
+  }
+  else {
+    return currentProducts;
+  }
+}
+
+
+
+const lastReleasedDate = async (page = 1, size = 48,brands="")=>
+{
+  try {
+    const response = await fetch(`https://clear-fashion-9jifddx12-sebastien78000.vercel.app/search?page=${page}&limit=${size}&brand=${brands}`);
+    const body = await response.json();
+    /*if (body.success !== true) {
+      console.error(body);
+      return {currentProducts, currentPagination};
+    }*/
+    lastReleasedDateVar=new Date("1901-10-01");
+    currentBrand=brands;
+
+      console.log("passe");
+      for(let i=1;i<=body.meta.pageCount;i++) //number of existing data
+      {
+        const response = await fetch(`https://clear-fashion-9jifddx12-sebastien78000.vercel.app/search?page=${i}&limit=${size}&brand=${brands}`);
+        const body = await response.json();    
+        body.products.forEach(x => {
+          if(new Date(x.released)>lastReleasedDateVar)
+          {
+            lastReleasedDateVar=new Date(x.released)
+          }
+        });
+      }
+      return {lastReleasedDateVar}
+    
+    
+  } catch (error) {
+    console.error(error);
+    return {lastReleasedDateVar};
+  }
+}
+
+const numberOfNewProducts = async (page = 1, size = 48,brands="")=>// products released less than one month ago
+{
+  try {
+    currentNbNewProducts=0;
+    const response = await fetch(`https://clear-fashion-9jifddx12-sebastien78000.vercel.app/search?page=${page}&limit=${size}&brand=${brands}`);
+    const body = await response.json();
+    /*if (body.success !== true) {
+      console.error(body);
+      return {currentProducts, currentPagination};
+    }*/
+    currentBrand=brands;
+
+      for(let i=1;i<=body.meta.pageCount;i++) //number of existing data
+      {
+        const response = await fetch(`https://clear-fashion-9jifddx12-sebastien78000.vercel.app/search?page=${page}&limit=${size}&brand=${brands}`);
+        const body = await response.json();    
+        body.products.forEach(x => {
+
+          var actualDate = new Date(Date.now());
+          actualDate.setDate(actualDate.getDate()-30);
+          if(actualDate<new Date(x.released))
+          {
+            currentNbNewProducts=currentNbNewProducts+1;
+          }
+
+        });
+      }
+      //console.log("cnb"+currentNbNewProducts);
+      return {currentNbNewProducts}
+    
+    
+    
+  } catch (error) {
+    console.error(error);
+    return {currentNbNewProducts};
+  }
+
+}
+
+const percentile = async (page = 1, size = 12,brands="") => // get mean and standard deviation WORK ONLY WHEN NO BRANDS ARE SELECTED
+{
+  try {
+    const response = await fetch(`https://clear-fashion-9jifddx12-sebastien78000.vercel.app/search?page=${page}&limit=${size}&brand=${brands}`);
+    const body = await response.json();
+    currentBrand=brands;
+    /*if (body.success !== true) {
+      console.error(body);
+      return {meanProduct,sdProduct};
+    }*/
+
+    var dataTemp=[] //to stock all the prices
+    var nbPage=0;
+    var bodyMark={"result":[],"meta":{"count":139,"currentPage":page,"pageSize":size,"pageCount":0}}
+    bodyMark.meta.pageCount=Math.ceil(bodyMark.meta.count/bodyMark.meta.pageSize);
+    let countData=0;
+    // determinate the mean
+    for(let i=1;i<=bodyMark.meta.pageCount;i++) //number of existing data
+    {
+      const response = await fetch(`https://clear-fashion-9jifddx12-sebastien78000.vercel.app/search?page=${page}&limit=${size}&brand=${brands}`);
+      const body = await response.json();    
+      nbPage=body.meta.pageCount;  
+      body.products.forEach(x => {
+        dataTemp.push(x.price)
+      });
+    }
+    dataTemp.forEach(x => {meanProduct = meanProduct+x;})
+    meanProduct=meanProduct/dataTemp.length;
+    // determinate the sd
+    for(let i=1;i<=bodyMark.meta.pageCount;i++) //number of existing data
+    {
+      const response = await fetch(`https://clear-fashion-9jifddx12-sebastien78000.vercel.app/search?page=${page}&limit=${size}&brand=${brands}`);
+      const body = await response.json();    
+      nbPage=body.meta.pageCount;  
+      body.products.forEach(x => {
+        sdProduct=sdProduct+(x.price+meanProduct)
+      });
+      sdProduct=Math.sqrt(sdProduct);
+    }
+    return {meanProduct,sdProduct}
+    
+    
+    
+  } catch (error) {
+    console.error(error);
+    return {meanProduct,sdProduct};
+  }
+}
+
+
+
+const instantiateFavorite = (fav) =>
+{
+  window.localStorage.setItem("fav",JSON.stringify(fav));
+}
+
+
+
+
 
 /**
  * Render list of products
  * @param  {Array} products
  */
 const renderProducts = products => {
+   console.log("products:",products);
   const fragment = document.createDocumentFragment();
   const div = document.createElement('div');
-
   const template = products
     .map(product => {
       return `
-      <div class="product" id=${product.uuid}>
-        <input type="checkbox" id="fav-product">fav</input>
+      <div class="product" id=${product._id}>
         <span>${product.brand}</span>
         <a href="${product.link}" target="_blank">${product.name}</a>
         <span>${product.price}</span>
@@ -92,183 +307,185 @@ const renderProducts = products => {
   fragment.appendChild(div);
   sectionProducts.innerHTML = '<h2>Products</h2>';
   sectionProducts.appendChild(fragment);
+
+  
 };
+
+
+const renderActualFavorites =products => {
+
+  console.log("passe2")
+  favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+  console.log(favorites[0]);
+  const fragment2 = document.createDocumentFragment();
+  const div2 = document.createElement('div');
+  const template2 = favorites
+    .map(favorite => {
+      return `
+      <div class="favorite" id=${favorite._id}>
+        <span>${favorite.brand}</span>
+        <a href="${favorite.link}" target="_blank">${favorite.name}</a>
+        <span>${favorite.price}</span>
+      </div>
+    `;
+    })
+    .join('');
+  
+  div2.innerHTML = template2;
+  fragment2.appendChild(div2);
+  let sectionActualFavorites = document.querySelector('#favorites-script');
+  sectionActualFavorites.innerHTML = '<h3>Actual Favorites</h3>';
+  sectionActualFavorites.appendChild(fragment2);
+
+  
+};
+
+
+
+const renderFavorites = products => {
+  var listOfFavorite = document.getElementById('favorites-setup');
+  listOfFavorite.options.length=0;
+  for (var i = 0; i<products.length; i++)
+  {
+    var opt = document.createElement('option');
+    opt.value = products[i].uuid;
+    opt.innerHTML = products[i].name;
+    listOfFavorite.add(opt);
+  }
+};
+
+
+
 
 /**
  * Render page selector
  * @param  {Object} pagination
  */
 const renderPagination = pagination => {
-    
-  const pageCount = pagination.pageCount;
-  const currentPage = pagination.currentPage;
-
+  const {currentPage, pageCount} = pagination;
   const options = Array.from(
     {'length': pageCount},
     (value, index) => `<option value="${index + 1}">${index + 1}</option>`
   ).join('');
 
+
   selectPage.innerHTML = options;
   selectPage.selectedIndex = currentPage - 1;
+
+
+
 };
 
 /**
- * Render indicators
+ * Render page selector
  * @param  {Object} pagination
  */
 const renderIndicators = pagination => {
   const {count} = pagination;
 
-  spanNbProducts.innerHTML = count;
-  spanNbNewProducts.innerHTML = currentProducts.filter(product => (Date.now() - new Date(product.released)) / (1000 * 60 * 60 * 24) <= 14).length;
-  
-  spanp50.innerHTML = currentProducts.sort((p1, p2) => p1.price - p2.price)[Math.floor(currentProducts.length * 0.5)].price;
-  spanp90.innerHTML = currentProducts.sort((p1, p2) => p1.price - p2.price)[Math.floor(currentProducts.length * 0.9)].price;
-  spanp95.innerHTML = currentProducts.sort((p1, p2) => p1.price - p2.price)[Math.floor(currentProducts.length * 0.95)].price;
+  spanNbProducts.innerHTML = currentPagination.count;//update nb products even when selecting a brand
+  spanLastReleaseDate.innerHTML=lastReleasedDateVar.toDateString();
 
-  spanLastRelease.innerHTML = currentProducts.sort((p1, p2) => Date.parse(p2.released) - Date.parse(p1.released))[0].released;
+  spanP50.innerHTML=Math.round(meanProduct);
+  spanP90.innerHTML=Math.round(meanProduct-1.29*sdProduct);
+  spanP95.innerHTML=Math.round(meanProduct-1.69*sdProduct);
+
+  spanNbNewProducts.innerHTML=currentNbNewProducts;
+
 };
 
-/**
- * Render brand filter selector
- * @param  {Array} products
- */
-const renderBrandFilter = (products, defaultBrand="Select a brand to filter") => {
-  var brands_name = [defaultBrand];
-  products.forEach(product => {
-    if (!brands_name.includes(product.brand)){
-      brands_name.push(product.brand);
-  }
-  });
+
+
+const render = (products, pagination) => {
+  renderProducts(products);
+  renderPagination(pagination);
+  renderIndicators(pagination);
+  renderActualFavorites(products);
+  renderFavorites(products);
   
-  const options = Array.from(
-    {'length': brands_name.length},
-    (value, index) => `<option value="${brands_name[index]}">${brands_name[index]}</option>`)
-    .join('')
-    
-  selectBrand.innerHTML = options;
-  const idx = brands_name.indexOf(currentBrand)
-  selectBrand.selectedIndex = idx;
-}
-
-
-/**
- * Render the entire page
- */
-const renderAll = () => {
-  renderProducts(currentProducts);
-  renderPagination(currentPagination);
-  renderIndicators(currentPagination);
-  renderBrandFilter(currentProducts);
+  
 };
+
 
 /**
  * Declaration of all Listeners
  */
 
+/**
+ * Select the number of products to display
+ * @type {[type]}
+ */
+selectShow.addEventListener('change', event => {
+  fetchProducts2(1, parseInt(event.target.value),currentBrand)
+    .then(setCurrentProducts)
+    .then(() => render(currentProducts, currentPagination));
+});
 
- document.addEventListener('DOMContentLoaded', async () => {
-    const products = await fetchProducts();
-  
-    setCurrentProducts(products);
-    renderAll(currentProducts, currentPagination);
+
+selectPage.addEventListener('change', event => {
+  fetchProducts2(parseInt(event.target.value), selectShow.value,currentBrand)
+    .then(setCurrentProducts)
+    .then(() => render(currentProducts, currentPagination));
+});
+
+selectBrands.addEventListener('change', event => {
+  fetchProducts2(1,12,event.target.value)
+    .then(setCurrentProducts)
+    .then(percentile(1,48,event.target.value))
+    .then(lastReleasedDate(1,48,event.target.value))
+    .then(numberOfNewProducts(1,48,event.target.value))
+    .then(() => render(currentProducts, currentPagination));
+});
+/*
+selectFavorites.addEventListener('change', event => {
+  instantiateFavorite(currentProduct[event.target.value])
+  .then(() => render(currentProducts, currentPagination));
+});
+*/
+
+selectSort.addEventListener('change', event => {
+  fetchProducts2()
+    .then(setCurrentProducts)
+    .then(() => render(SortByDateByPrice(event.target.value), currentPagination));
   });
 
-/**
- * Select the number of products (size/show) to display
- */
-selectSize.addEventListener('change', async (event) => {
-    if (currentPagination.currentPage * parseInt(event.target.value) >= currentPagination.count){
-        fetchProducts(1, parseInt(event.target.value))
-        .then(setCurrentProducts)
-        .then(() => renderAll())
-    }
-    else {
-        fetchProducts(currentPagination.currentPage, parseInt(event.target.value))
-        .then(setCurrentProducts)
-        .then(() => renderAll())
-    }
-});
 
-/**
- * Select the page number to display
- */
-selectPage.addEventListener('change', event => {
-  fetchProducts(parseInt(event.target.value), currentPagination.pageSize)
+selectFilter.addEventListener('change', event => {
+  fetchProducts2()
     .then(setCurrentProducts)
-    .then(() => renderAll(currentProducts, currentPagination))
+    .then(()=>render(FilterByRecentProductByReasonnablePrice(event.target.value), currentPagination));
+  }
+);
+
+
+
+
+document.addEventListener('DOMContentLoaded', async () => {
+  fetchProducts2(1,12,"montlimart")
+    .then(setCurrentProducts)
+    .then(percentile)
+    .then(lastReleasedDate())
+    .then(numberOfNewProducts())
+    .then(() => render(currentProducts, currentPagination));
 });
 
-/**
- * Select the brand to filter products by
- */
-selectBrand.addEventListener('change', event => {
-    currentBrand = event.target.value;
-    if (currentBrand !== "Select a brand to filter") {
-        currentProducts = currentProducts.filter(product => product.brand === currentBrand);
-        renderAll(currentProducts, currentPagination);
-    }
-    else {
-        fetchProducts(currentPagination.currentPage, currentPagination.pageSize)
-        .then(setCurrentProducts)
-        .then(() => renderAll(currentProducts, currentPagination));
-    }
-});
 
-/**
- * Select the sorting method for displaying products
- */
-selectSort.addEventListener('change', event => {
-    const sort = event.target.value;
+let button =async function() {
+  var listOfItemsForAddingInFavorite = document.getElementById('favorites-setup');
+  console.log(listOfItemsForAddingInFavorite.value);
+  favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+  //console.log(favorites);
+  let productToAddFav = favorites.find(product => product._id == listOfItemsForAddingInFavorite.value);
 
-    switch (sort) {
-        case "price-asc":
-            currentProducts.sort((p1, p2) => p1.price - p2.price);
-            break;
-        case "price-desc":
-            currentProducts.sort((p1, p2) => p2.price - p1.price);
-            break;
-        case "date-asc":
-            currentProducts.sort((p1, p2) => Date.parse(p2.released) - Date.parse(p1.released));
-            break;
-        case "date-desc":
-            currentProducts.sort((p1, p2) => Date.parse(p1.released) - Date.parse(p2.released));
-            break;
-    }
+  if (productToAddFav === undefined) {
+    const products = await fetchProducts2(currentPagination.currentPage, currentPagination.pageSize,currentBrand);
+    productToAddFav = products.result.find(product => product.uuid == listOfItemsForAddingInFavorite.value);
 
-    renderAll(currentProducts, currentPagination);
-});
-
-/**
- * Select the filter to show only recent products
- */
-inputRecentFilter.addEventListener('click', event => {
-    recentOnly = inputRecentFilter.checked
-    if (recentOnly) {
-        // products that has been released in less than 14 days 
-        currentProducts = currentProducts.filter(product => (Date.now() - new Date(product.released)) / (1000 * 60 * 60 * 24) <= 14);
-        renderAll(currentProducts, currentPagination);
-    }
-    else {
-        fetchProducts(currentPagination.currentPage, currentPagination.pageSize)
-        .then(setCurrentProducts)
-        .then(() => renderAll(currentProducts, currentPagination));
-    }
-});
-
-/**
- * Select the filter to show only products below a given price
- */
-inputPriceFilter.addEventListener('click', event => {
-    cheapOnly = inputPriceFilter.checked
-    if (cheapOnly) {
-        // products that costs less than 50
-        currentProducts = currentProducts.filter(product => product.price < 50);
-        renderAll(currentProducts, currentPagination);
-    }
-    else {
-        fetchProducts(currentPagination.currentPage, currentPagination.pageSize)
-        .then(setCurrentProducts)
-        .then(() => renderAll(currentProducts, currentPagination));
-    }
-});
+    favorites.push(productToAddFav);
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+    window.alert(`Le produit ${productToAddFav.name} de la marque ${productToAddFav.brand} vient d'etre ajoute a vos favoris.`);
+  }
+  else{
+    window.alert(`Le produit ${productToAddFav.name} de la marque ${productToAddFav.brand} a deja ete ajoute a vos favoris.`)
+  }
+}

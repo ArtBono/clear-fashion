@@ -2,71 +2,93 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link rel="stylesheet" href="style.css">
-    <title>👕 Clear Fashion | Environmentally & human-friendly clothes</title>
+    <title>👕 Clear Fahion | Environmentally & human-friendly clothes</title>
   </head>
-  <body>
-    <h1>Clear fashion</h1>
-    <section id="options">
-      <h2>Options</h2>
+  <body style="background-color:#eb7fb6;">
+    <h1 style="text-align:center">Clear Fashion</h1>
+    <section style="text-align:center" id="options">
       <div id="show">
-        <label for="show-select">Show:</label>
-        <select name="show" id="show-select">
+        <label style="text-align:center" for="show-select">Show:</label>
+        <select style="text-align:center" name="show" id="show-select">
           <option value="12">12</option>
           <option value="24">24</option>
           <option value="48">48</option>
         </select>
       </div>
       <div id="page">
-        <label for="page-select">Go to page:</label>
-        <select name="page" id="page-select"> </select>
+        <label style="text-align:center" for="page-select">Go to page:</label>
+        <select style="text-align:center" name="page" id="page-select"> </select>
       </div>
       <div id="filters">
-        <input type="checkbox" id="price-filter" value="clicked">By reasonable price</input>
-        <input type="checkbox" id="recent-filter" value="clicked">By recently released</input>
         <div id="brand">
-          <label for="brand-select">By brands:</label>
-          <select name="brand" id="brand-select"></select>
+          <label style="text-align:center" for="brand-select">By brands:</label>
+          <select style="text-align:center" name="brand" id="brand-select">
+            <option value="" selected>--All the marks--</option>>
+            <option value="montlimart">Montlimart</option>
+            <option value="dedicated">Dedicated</option>
+            <option value="adresse">Adresse</option>
+          </select>
         </div>
       </div>
       <div id="sort">
-        <label for="sort-select">Sort:</label>
-        <select name="sort" id="sort-select">
+        <label style="text-align:center" for="sort-select-lab">Sort by price or by date</label>
+        <select style="text-align:center" name="sort" id="sort-select">
+          <option value="">-- No filter --</option>
           <option value="price-asc">Cheaper</option>
           <option value="price-desc">Expensive</option>
           <option value="date-asc">Recently released</option>
           <option value="date-desc">Anciently released</option>
         </select>
       </div>
-    </section>
-    <section id="indicators">
-      <h2>Indicators</h2>
-      <div class="indicator">
-        <span>Number of products</span>
-        <span id="nbProducts">0</span>
-      </div>
-      <div class="indicator">
-        <span>Number of new products</span>
-        <span id="nbNewProducts">0</span>
-      </div>
-      <div class="indicator">
-        <span>p50 price value</span>
-        <span id="p50">0</span>
-      </div>
-      <div class="indicator">
-        <span>p90 price value</span>
-        <span id="p90">0</span>
-      </div>
-      <div class="indicator">
-        <span>p95 price value</span>
-        <span id="p95">0</span>
-      </div>
-      <div class="indicator">
-        <span>Last released date</span>
-        <span id="last-release">2020-01-01</span>
+      <div id="filter">
+        <label style="text-align:center" for="sort-select-lab">Filter by reasonnable price less than 50€ or by recent products less than two weeks</label>
+        <select style="text-align:center" name="filter" id="filter-select">
+          <option value="">-- No filter --</option>
+          <option value="price">reasonnable price</option>
+          <option value="recent">recent products</option>
+        </select>
       </div>
     </section>
-    <section id="products"></section>
-    <script type="text/javascript" charset="UTF-8" src="portfolio.js"></script>
+    <section style="text-align:center" id="indicators">
+      <h2 style="text-align:center">Indicators</h2>
+      <div style="text-align:center">
+        <span style="text-align:center">Number of products:</span>
+        <span style="text-align:center" id="nbProducts">0</span>
+      </div>
+      <div style="text-align:center">
+        <span style="text-align:center"> Number of new products:</span>
+        <span style="text-align:center" id="nbNewProducts">0</span>
+      </div>
+      <div style="text-align:center">
+        <span style="text-align:center">p50 price value:</span>
+        <span style="text-align:center" id="p50">0</span>
+      </div>
+      <div style="text-align:center">
+        <span style="text-align:center">p90 price value:</span>
+        <span style="text-align:center" id="p90">0</span>
+      </div>
+      <div style="text-align:center">
+        <span style="text-align:center">p95 price value:</span>
+        <span style="text-align:center" id="p95">0</span>
+      </div>
+      <div style="text-align:center">
+        <span >Last released date:</span>
+        <span style="text-align:center" id="lastReleasedDate">2020-01-01</span>
+      </div>
+    </section>
+    <section style="text-align:center" id="products"></section>
+    <script style="text-align:center" type="text/javascript" charset="UTF-8" src="portfolio.js"></script>
+    <h2 style="text-align:center">Favorites</h2>
+    <section style="text-align:center" id="favorites-script"></section>
+    <script style="text-align:center" type="text/javascript" charset="UTF-8" src="portfolio.js"></script>
+	<h3 style="text-align:center">Add to Favorites</h3>
+    <section id="Addtofavorites" style="text-align:center">
+      <div id="favorites">
+        <label for="fav">Products</label>
+        <select id="favorites-setup"></select>
+      </div>
+      <input type="button" value="Add product to favorites" onclick="button();">
+    </section>
+    
   </body>
 </html>
