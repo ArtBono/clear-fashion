@@ -1,5 +1,3 @@
-"use strict";
-
 // Import the dependency.
 const clientPromise = require('./mongodb-client');
 const ObjectId = require("mongodb").ObjectID;

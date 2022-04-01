@@ -50,7 +50,7 @@ const fetchProducts2 = async (page = 1, size = 12,brands="") => {
   
   try {
     const response = await fetch(
-      `https://clear-fashion-9jifddx12-sebastien78000.vercel.app/search?page=${page}&limit=${size}&brand=${brands}`
+      `https://server-artbono.vercel.app/search?page=${page}&limit=${size}&brand=${brands}`
     );
     const body = await response.json();
 	/*
