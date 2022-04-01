@@ -154,7 +154,7 @@ const FilterByRecentProductByReasonnablePrice=(filter)=>
 const lastReleasedDate = async (page = 1, size = 48,brands="")=>
 {
   try {
-    const response = await fetch(`https://clear-fashion-9jifddx12-sebastien78000.vercel.app/search?page=${page}&limit=${size}&brand=${brands}`);
+    const response = await fetch(`https://server-artbono.vercel.app/search?page=${page}&limit=${size}&brand=${brands}`);
     const body = await response.json();
     /*if (body.success !== true) {
       console.error(body);
@@ -166,7 +166,7 @@ const lastReleasedDate = async (page = 1, size = 48,brands="")=>
       console.log("passe");
       for(let i=1;i<=body.meta.pageCount;i++) //number of existing data
       {
-        const response = await fetch(`https://clear-fashion-9jifddx12-sebastien78000.vercel.app/search?page=${i}&limit=${size}&brand=${brands}`);
+        const response = await fetch(`https://server-artbono.vercel.app/search?page=${i}&limit=${size}&brand=${brands}`);
         const body = await response.json();    
         body.products.forEach(x => {
           if(new Date(x.released)>lastReleasedDateVar)
@@ -188,7 +188,7 @@ const numberOfNewProducts = async (page = 1, size = 48,brands="")=>// products r
 {
   try {
     currentNbNewProducts=0;
-    const response = await fetch(`https://clear-fashion-9jifddx12-sebastien78000.vercel.app/search?page=${page}&limit=${size}&brand=${brands}`);
+    const response = await fetch(`https://server-artbono.vercel.app/search?page=${page}&limit=${size}&brand=${brands}`);
     const body = await response.json();
     /*if (body.success !== true) {
       console.error(body);
@@ -198,7 +198,7 @@ const numberOfNewProducts = async (page = 1, size = 48,brands="")=>// products r
 
       for(let i=1;i<=body.meta.pageCount;i++) //number of existing data
       {
-        const response = await fetch(`https://clear-fashion-9jifddx12-sebastien78000.vercel.app/search?page=${page}&limit=${size}&brand=${brands}`);
+        const response = await fetch(`https://server-artbono.vercel.app/search?page=${page}&limit=${size}&brand=${brands}`);
         const body = await response.json();    
         body.products.forEach(x => {
 
@@ -226,7 +226,7 @@ const numberOfNewProducts = async (page = 1, size = 48,brands="")=>// products r
 const percentile = async (page = 1, size = 12,brands="") => // get mean and standard deviation WORK ONLY WHEN NO BRANDS ARE SELECTED
 {
   try {
-    const response = await fetch(`https://clear-fashion-9jifddx12-sebastien78000.vercel.app/search?page=${page}&limit=${size}&brand=${brands}`);
+    const response = await fetch(`https://server-artbono.vercel.app/search?page=${page}&limit=${size}&brand=${brands}`);
     const body = await response.json();
     currentBrand=brands;
     /*if (body.success !== true) {
@@ -242,7 +242,7 @@ const percentile = async (page = 1, size = 12,brands="") => // get mean and stan
     // determinate the mean
     for(let i=1;i<=bodyMark.meta.pageCount;i++) //number of existing data
     {
-      const response = await fetch(`https://clear-fashion-9jifddx12-sebastien78000.vercel.app/search?page=${page}&limit=${size}&brand=${brands}`);
+      const response = await fetch(`https://server-artbono.vercel.app/search?page=${page}&limit=${size}&brand=${brands}`);
       const body = await response.json();    
       nbPage=body.meta.pageCount;  
       body.products.forEach(x => {
@@ -254,7 +254,7 @@ const percentile = async (page = 1, size = 12,brands="") => // get mean and stan
     // determinate the sd
     for(let i=1;i<=bodyMark.meta.pageCount;i++) //number of existing data
     {
-      const response = await fetch(`https://clear-fashion-9jifddx12-sebastien78000.vercel.app/search?page=${page}&limit=${size}&brand=${brands}`);
+      const response = await fetch(`https://server-artbono.vercel.app/search?page=${page}&limit=${size}&brand=${brands}`);
       const body = await response.json();    
       nbPage=body.meta.pageCount;  
       body.products.forEach(x => {
