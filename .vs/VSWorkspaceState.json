@@ -1,11 +1,11 @@
 {
   "ExpandedNodes": [
     "",
-    "\\client",
     "\\client\\v1",
     "\\client\\v2",
-    "\\server"
+    "\\server",
+    "\\server\\db"
   ],
-  "SelectedNode": "\\server\\products_adresse.json",
+  "SelectedNode": "\\server\\api.js",
   "PreviewInSolutionExplorer": false
 }
