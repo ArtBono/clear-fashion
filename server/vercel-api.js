@@ -8,7 +8,7 @@ const app = express();
 
 const { calculateLimitAndOffset, paginate } = require('paginate-info');
 
-const  DATABASE_NAME = "clear-fashion";
+const  DATABASE_NAME = "clearfashion";
 
 app.get('/', async (request, response) => {
     const client = await clientPromise;
