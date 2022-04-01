@@ -1,3 +1,13 @@
+Bonsoir,
+Voici un petit résumé de mon avancée sur le projet.
+J'ai réussi à scrapper les données depuis les différents sites.
+J'ai réussi à créer ma base de données sur mondodb atlas.
+J'ai réussi à implémenter mon API locale et faire les requetes sur insomnia.
+La tâche qui m'a bloqué est le déploiement de l'API sur Vercel. J'ai créé les deux projets server et client, 
+mais impossible d'avoir la page server correctement affichée. J'ai l'erreur timed out, et je n'arrive pas à la résoudre.
+J'ai regadré les travaux de mes camarades pour essayer de me débloquer mais rien à faire..
+J'ai malgré tout implémenté la suite, et l'affichage client final dans l'espoir d'arriver à me débloquer.
+
 # 👕 Clear Fashion
 
 > What's the story behind each item of clothing you buy?
