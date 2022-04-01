@@ -1,7 +1,7 @@
 {
   "version": 2,
   "builds": [{"src": "*.js", "use": "@now/node"}],
-  "routes": [{"src": "/(.*)", "dest": "api.js", 
+  "routes": [{"src": "/(.*)", "dest": "vercel-api.js", 
         "headers": {
             "Access-Control-Allow-Credentials": "true",
             "Access-Control-Allow-Origin": "*",
